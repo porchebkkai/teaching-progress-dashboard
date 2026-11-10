@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ระบบรายงานความคืบหน้าการสอน - Teaching Progress Dashboard | Iqra Muslim School</title>
+
+  <!-- Open Graph / Meta -->
+  <meta name="description" content="ระบบรายงานและติดตามความคืบหน้าการจัดการเรียนการสอน โรงเรียนอิสลามสันติชน (Iqra Muslim School)" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ระบบรายงานความคืบหน้าการสอน - Teaching Progress Dashboard" />
+  <meta property="og:description" content="รายงานความคืบหน้าการสอน แดชบอร์ดติดตามรายวิชาและครูผู้สอน Iqra Muslim School" />
+  <meta property="og:image" content="logo.png" />
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <link rel="icon" type="image/png" href="logo.png" />
+
+  <!-- Fonts & Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Plus Jakarta Sans', 'Sarabun', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+  <!-- Shown while redirecting to the Apps Script web app -->
+  <div id="loadingScreen" class="min-h-screen flex flex-col items-center justify-center p-6 text-center">
+    <div class="relative mb-5">
+      <img src="logo.png" alt="Iqra Muslim School" class="w-20 h-20 object-contain drop-shadow-sm"
+           onerror="this.onerror=null; this.src='https://img2.pic.in.th/IMG_98426b7507513c51ba19.png';" />
+    </div>
+    <i class="fa-solid fa-circle-notch fa-spin text-indigo-600 text-3xl mb-4"></i>
+    <h1 class="text-slate-900 font-extrabold text-lg sm:text-xl mb-1 tracking-tight">กำลังเปิดระบบรายงานความคืบหน้าการสอน...</h1>
+    <p class="text-slate-500 text-sm mb-5">Teaching Progress Dashboard · Iqra Muslim School</p>
+    <a id="manualLink" href="#" class="inline-flex items-center gap-1.5 text-indigo-600 hover:text-indigo-800 text-sm font-semibold underline underline-offset-4 transition-colors">
+      <span>หากหน้าเว็บไม่เปิดอัตโนมัติ กดที่นี่</span>
+      <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+    </a>
+  </div>
+
+  <!-- Shown if opened inside an in-app browser (e.g. LINE, Facebook, Instagram) -->
+  <div id="inAppBrowserModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md p-7 sm:p-8 flex flex-col justify-between text-center border border-slate-100 animate-in fade-in zoom-in-95 duration-200">
+      <div>
+        <div class="flex flex-col items-center justify-center mb-5">
+          <img src="logo.png" alt="Iqra Muslim School" class="w-20 h-20 object-contain drop-shadow-sm"
+               onerror="this.onerror=null; this.src='https://img2.pic.in.th/IMG_98426b7507513c51ba19.png';" />
+        </div>
+        <h2 class="text-2xl font-extrabold text-slate-900 mb-2 tracking-tight">เปิดในเบราว์เซอร์หลัก</h2>
+        <p class="text-slate-600 text-sm mb-5 leading-relaxed">
+          เพื่อประสิทธิภาพสูงสุดและความปลอดภัยของระบบรายงานความคืบหน้าการสอน กรุณาเปิดหน้าเว็บนี้ในเบราว์เซอร์หลัก (เช่น Chrome หรือ Safari)
+        </p>
+        <div class="text-left text-sm text-slate-700 space-y-2.5 bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
+          <p class="font-bold text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-circle-info text-indigo-600"></i>คำแนะนำ:
+          </p>
+          <p class="text-xs sm:text-sm text-slate-600">• <b>LINE:</b> กดปุ่ม <b>"เปิดเบราว์เซอร์"</b> ด้านล่าง</p>
+          <p class="text-xs sm:text-sm text-slate-600">• <b>แอปอื่นๆ:</b> กดปุ่ม <b>"คัดลอกลิงก์"</b> แล้วนำไปเปิดใน Chrome หรือ Safari</p>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-center mt-6">
+        <div class="flex flex-col sm:flex-row gap-2.5 w-full mb-3">
+          <button id="confirmButton" class="flex-1 py-3 px-4 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 shadow-md shadow-indigo-500/20 transition-all flex items-center justify-center gap-2">
+            <i class="fa-brands fa-safari text-base"></i>
+            <span>เปิดเบราว์เซอร์</span>
+          </button>
+          <button id="copyLinkButton" class="flex-1 py-3 px-4 rounded-xl text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 transition-colors flex items-center justify-center gap-2">
+            <i class="fa-solid fa-link text-sm"></i>
+            <span>คัดลอกลิงก์</span>
+          </button>
+        </div>
+        <span id="copyMessage" class="text-emerald-600 text-xs font-semibold hidden transition-all">
+          <i class="fa-solid fa-circle-check me-1"></i>คัดลอกลิงก์สำเร็จ!
+        </span>
+        <a id="directLinkInModal" href="#" class="mt-4 text-xs text-slate-400 hover:text-slate-600 underline">
+          ต้องการเปิดต่อในแอปนี้ (อาจเกิดข้อจำกัดในการแสดงผล)
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Apps Script web app URL for Teaching Progress Dashboard
+      const web_app_url = 'https://script.google.com/macros/s/AKfycbwp1JblkFgo0vN57CF3XfCHuK0EABNaDZXNzof8rv1TvJf5JpscqoUhs7ZBVdGCA6Mm/exec';
+
+      function buildTargetUrl() {
+        const target = new URL(web_app_url);
+        const currentParams = new URLSearchParams(window.location.search);
+        currentParams.delete('openExternalBrowser');
+        currentParams.forEach((val, key) => target.searchParams.set(key, val));
+        if (window.location.hash) target.hash = window.location.hash;
+        return target.toString();
+      }
+
+      function goToApp() {
+        window.location.replace(buildTargetUrl());
+      }
+
+      function is_InAppBrowser() {
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        const isChrome = /Chrome/i.test(userAgent) && !/Edg/i.test(userAgent);
+        return (
+          !isChrome &&
+          /FBAV|FBAN|LINE|Tiktok|Instagram|Twitter|Snapchat|Telegram|MicroMessenger|Pinterest|Reddit|Threads/i.test(userAgent)
+        );
+      }
+
+      const targetUrl = buildTargetUrl();
+      const manualLink = document.getElementById('manualLink');
+      const directLinkInModal = document.getElementById('directLinkInModal');
+      manualLink.setAttribute('href', targetUrl);
+      directLinkInModal.setAttribute('href', targetUrl);
+
+      const urlParams = new URLSearchParams(window.location.search);
+
+      // If user clicked LINE "Open External Browser"
+      if (urlParams.has('openExternalBrowser')) {
+        goToApp();
+        return;
+      }
+
+      if (is_InAppBrowser()) {
+        const modal = document.getElementById('inAppBrowserModal');
+        const loadingScreen = document.getElementById('loadingScreen');
+        const confirmButton = document.getElementById('confirmButton');
+        const copyLinkButton = document.getElementById('copyLinkButton');
+        const copyMessage = document.getElementById('copyMessage');
+
+        const urlToRedirect = new URL(window.location.href);
+        urlToRedirect.searchParams.set('openExternalBrowser', '1');
+
+        modal.classList.remove('hidden');
+        loadingScreen.classList.add('hidden');
+
+        confirmButton.addEventListener('click', function () {
+          window.location.href = urlToRedirect.toString();
+        });
+
+        copyLinkButton.addEventListener('click', async function () {
+          try {
+            await navigator.clipboard.writeText(urlToRedirect.toString());
+            copyMessage.textContent = 'คัดลอกลิงก์สำเร็จ!';
+            copyMessage.classList.remove('hidden');
+            setTimeout(() => copyMessage.classList.add('hidden'), 2500);
+          } catch (err) {
+            copyMessage.textContent = 'ไม่สามารถคัดลอกได้ กรุณาคัดลอก URL ด้านบนด้วยตนเอง';
+            copyMessage.classList.remove('hidden');
+            setTimeout(() => copyMessage.classList.add('hidden'), 3500);
+          }
+        });
+      } else {
+        goToApp();
+      }
+    });
+  </script>
+</body>
+</html>
