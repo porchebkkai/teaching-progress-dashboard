@@ -19,3 +19,4 @@ Frontend redirect wrapper to bypass in-app browser restrictions (LINE, Facebook,
 1. Source branch: `main`
 2. Folder: `/ (root)`
 3. Site URL: `https://porchebkkai.github.io/teaching-progress-dashboard/`
+
